@@ -1,23 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import pandas as pd
 import numpy as np
 from prophet import Prophet
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirProphet(object):
     
@@ -30,14 +15,42 @@ class AirProphet(object):
                              seasonality_prior_scale=self.seasonality_prior_scale) 
                     
     def fit(self, dfTrain: pd.DataFrame) -> None:
+        """
+        Fit model's parameters
+
+        Parameters
+        ----------
+        dfTrain : pd.DataFrame
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model.fit(dfTrain)
 
     def predict(self, xTest: pd.DataFrame) -> np.ndarray:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        xTest : pd.DataFrame
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         return self.model.predict(xTest)['yhat']
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from src.data_pre_processing.preprocess_data import AirDataPreProcessor, split_air_data
     from sklearn.metrics import mean_squared_error
     import matplotlib.pyplot as plt

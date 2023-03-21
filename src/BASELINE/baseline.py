@@ -1,37 +1,51 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
-
 import numpy as np
 from sklearn.linear_model import LinearRegression
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirBaseline(object):
     
     def __init__(self):
-        self.model = LinearRegression() 
-                    
+        self._model = LinearRegression() 
+    
     def fit(self, yTrain: np.ndarray, xTrain: np.ndarray) -> None:
+        """
+        Fit the model's parameters
+
+        Parameters
+        ----------
+        yTrain : np.ndarray
+            DESCRIPTION.
+        xTrain : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model.fit(xTrain, yTrain)
 
     def predict(self, xTest: np.ndarray) -> np.ndarray:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        xTest : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        np.ndarray
+            DESCRIPTION.
+
+        """
         return self.model.predict(xTest)
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from pre_process_data_baseline import AirDataPreProcessorBaseline
     from src.data_pre_processing.preprocess_data import split_air_data
     from sklearn.metrics import mean_squared_error

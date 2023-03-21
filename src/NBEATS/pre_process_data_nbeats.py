@@ -1,13 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Mar  6 00:27:39 2023
-
-@author: othma
-"""
-
-
-from os.path import abspath, dirname
-import sys
 
 from typing import Tuple
 
@@ -21,27 +12,55 @@ from darts.utils.timeseries_generation import datetime_attribute_timeseries
 from darts.dataprocessing.transformers import Scaler
 from darts.utils.model_selection import train_test_split
 
-import warnings
-warnings.filterwarnings("ignore")
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
-
-
-class AirDataPreProcessorNbeats(object):
+class AirDataPreProcessorDarts(object):
     
     def __init__(self, shift: int = 1, lag: int = 1):
-        self.shift = shift
-        self.lag = lag 
+        self._shift = shift
+        self._lag = lag 
         
-        self.scaler = None
-        self.scaler_covs = None
+        self._scaler = None
+        self._scaler_covs = None
     
-    def get_air_data(self) -> None:
+    @property
+    def shift(self):
+        return self._shift 
+
+    @property
+    def lag(self):
+        return self._lag 
+
+    @property
+    def scaler(self):
+        return self._scaler 
+
+    @property
+    def scaler_covs (self):
+        return self._scaler_covs 
+    
+    @scaler.setter
+    def scaler(self, new_scaler):
+        if isinstance(new_scaler, Scaler):
+            self._scaler = new_scaler
+        else:
+            raise TypeError("Only Scaler type is allowed")
+            
+    @scaler_covs.setter
+    def scaler_covs(self, new_scaler):
+        if isinstance(new_scaler, Scaler):
+            self._scaler_covs = new_scaler
+        else:
+            raise TypeError("Only Scaler type is allowed")
+            
+    def get_air_data(self) -> Tuple[tsFormat, tsFormat]:
+        """
+        Load and pre-process air data
+
+        Returns
+        -------
+        Tuple[tsFormat, tsFormat]
+            DESCRIPTION.
+
+        """
         # load air data
         dataAir = load_air_data_darts()
         
@@ -51,14 +70,50 @@ class AirDataPreProcessorNbeats(object):
         return series, covariates
     
     def save_air_darts(self, data: pd.DataFrame) -> None:
+        """
+        Save air data. Not implemented yet
+
+        Parameters
+        ----------
+        data : pd.DataFrame
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         pass    
-        
-# load data 
+    
+
 def load_air_data_darts() -> pd.DataFrame:
+    """
+    Load air data
+
+    Returns
+    -------
+    TYPE
+        DESCRIPTION.
+
+    """
     return AirPassengersDataset().load()
 
-# pre-process data
 def pre_process_data_darts(series: tsFormat) -> Tuple:
+    """
+    Pre-process air data
+
+    Parameters
+    ----------
+    series : tsFormat
+        DESCRIPTION.
+
+    Returns
+    -------
+    Tuple
+        DESCRIPTION.
+
+    """
     # Convert monthly number of passengers to average daily number of passengers per month
     series = series / TimeSeries.from_series(series.time_index.days_in_month)
     series = series.astype(np.float32)
@@ -92,9 +147,26 @@ def pre_process_data_darts(series: tsFormat) -> Tuple:
     return series, covariates, transformer, scaler_covs
 
 
-# split data
 def split_air_data_darts(series: tsFormat, option: str = 'periods',
                    training_cutoff: pd.Timestamp("19571201") = None) -> Tuple[tsFormat, tsFormat]:
+    """
+    Test and train splitting of air data
+
+    Parameters
+    ----------
+    series : tsFormat
+        DESCRIPTION.
+    option : str, optional
+        DESCRIPTION. The default is 'periods'.
+    training_cutoff : pd.Timestamp("19571201"), optional
+        DESCRIPTION. The default is None.
+
+    Returns
+    -------
+    Tuple[tsFormat, tsFormat]
+        DESCRIPTION.
+
+    """
 
     if option == "periods":
         if training_cutoff is None:
@@ -106,18 +178,31 @@ def split_air_data_darts(series: tsFormat, option: str = 'periods',
 
     return train, test
     
-# filename for saving processed data
-def filename_air_processed_nbeats(suff: str = "") -> str:
-    return f"AirPassengersProcessedDartsNbeats_{suff}.csv"
+def filename_air_processed_darts(suff: str = "") -> str:
+    """
+    Returns the name of the file used to save air data
+
+    Parameters
+    ----------
+    suff : str, optional
+        DESCRIPTION. The default is "".
+
+    Returns
+    -------
+    str
+        DESCRIPTION.
+
+    """
+    return f"AirPassengersProcessedDarts_{suff}.csv"
     
 
 if __name__ == "__main__":
-    # first test of functions
+    # Test functions
     dataAir = load_air_data_darts()
     dataAir, covariates, _, _ = pre_process_data_darts(dataAir)
     train, test = split_air_data_darts(dataAir)
     
-    air_preprocessor = AirDataPreProcessorNbeats()
+    air_preprocessor = AirDataPreProcessorDarts()
     dataAir2, _  = air_preprocessor.get_air_data()
 
     print(dataAir.pd_dataframe())

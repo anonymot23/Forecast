@@ -1,24 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import pandas as pd
 import numpy as np
 from tbats import TBATS
-
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirTbats(object):
     
@@ -29,15 +13,43 @@ class AirTbats(object):
         self.model_fitted = None
         
     def fit(self, yTrain: np.ndarray) -> None:
+        """
+        Fit model's parameters
+
+        Parameters
+        ----------
+        yTrain : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model_fitted = self.model.fit(yTrain)
 
     def predict(self, horizon: int = 0) -> pd.Series:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        horizon : int, optional
+            DESCRIPTION. The default is 0.
+
+        Returns
+        -------
+        pd.Series
+            DESCRIPTION.
+
+        """
         if self.model_fitted is not None:
             return self.model_fitted.forecast(steps=horizon)
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from src.data_pre_processing.preprocess_data import AirDataPreProcessor, split_air_data
     from sklearn.metrics import mean_squared_error
     import matplotlib.pyplot as plt

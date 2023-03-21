@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
 import numpy as np
-
-from os.path import abspath, dirname
-import sys
 
 from darts.timeseries import TimeSeries as tsFormat
 from darts.models import TFTModel
@@ -19,23 +10,17 @@ from sklearn.metrics import mean_squared_error
 import warnings
 warnings.filterwarnings("ignore")
 
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
-
 from parameters import QUANTILES_TFT
 
 import matplotlib.pyplot as plt
 
 class AirTFT(object):
     
-    def __init__(self, input_chunk_len, fcst_horizon,
-                 hidden_size = 64, lstm_layers = 1, 
-                 attention_heads = 4, dropout = 0.1, batch_size = 16,
-                 epochs = 300, rnd_state = 42, nb_samples = 200):
+    def __init__(self, input_chunk_len: int, fcst_horizon: int,
+                 hidden_size: int = 64, lstm_layers: int = 1, 
+                 attention_heads: int = 4, dropout: float = 0.1,
+                 batch_size: int = 16, epochs: int = 300,
+                 rnd_state: int = 42, nb_samples: int = 200):
         
         self.input_chunk_len = input_chunk_len
         self.fcst_horizon = fcst_horizon
@@ -67,20 +52,50 @@ class AirTFT(object):
                             )
                     
     def fit(self, train: tsFormat, covariates: tsFormat) -> None:
+        """
+        Fit models's parameters
+
+        Parameters
+        ----------
+        train : tsFormat
+            DESCRIPTION.
+        covariates : tsFormat
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model.fit(train, future_covariates=covariates, verbose=True)
     
 
     def predict(self, horizon: int) -> np.ndarray:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        horizon : int
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         return self.model.predict(n=horizon, num_samples=200)
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     ## import libraries
-    from pre_process_data_tft import AirDataPreProcessorTFT, split_air_data_darts
+    from src.NBEATS.pre_process_data_nbeats import AirDataPreProcessorDarts, split_air_data_darts
     
     ## load data
-    air_preprocessor = AirDataPreProcessorTFT()
+    air_preprocessor = AirDataPreProcessorDarts()
     dataAir, covariates  = air_preprocessor.get_air_data()
     train, test = split_air_data_darts(dataAir)
     cov_train, cov_test = split_air_data_darts(covariates)

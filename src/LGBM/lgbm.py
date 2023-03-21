@@ -1,22 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import numpy as np
 from lightgbm import LGBMRegressor
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirLgbm(object):
     
@@ -25,14 +10,44 @@ class AirLgbm(object):
         self.model_fitted = None
                     
     def fit(self, yTrain: np.ndarray, xTrain: np.ndarray) -> None:
+        """
+        Fit the model's parameters
+
+        Parameters
+        ----------
+        yTrain : np.ndarray
+            DESCRIPTION.
+        xTrain : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model_fitted = self.model.fit(xTrain, yTrain)
 
     def predict(self, xTest: np.ndarray) -> np.ndarray:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        xTest : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         return self.model_fitted.predict(xTest)
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from pre_process_data_lgbm import AirDataPreProcessorLgbm
     from src.data_pre_processing.preprocess_data import split_air_data
     from sklearn.metrics import mean_squared_error

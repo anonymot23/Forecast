@@ -1,22 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import pandas as pd
 from statsmodels.tsa.api import ExponentialSmoothing
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirExpSmoothing(object):
     
@@ -32,6 +17,20 @@ class AirExpSmoothing(object):
         self.use_boxcox = use_boxcox
     
     def initialize_model(self, yTrain: pd.Series) -> None:
+        """
+        Initialize model parameters
+
+        Parameters
+        ----------
+        yTrain : pd.Series
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.min_val_train = yTrain.min()-0.1
         self.model = ExponentialSmoothing(yTrain-self.min_val_train, 
                     seasonal_periods=self.lag, 
@@ -41,18 +40,46 @@ class AirExpSmoothing(object):
                     initialization_method='estimated')
                     
     def fit(self, yTrain: pd.Series) -> None:
+        """
+        Fit the model's parameters
+
+        Parameters
+        ----------
+        yTrain : pd.Series
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         if self.model is None:
             self.initialize_model(yTrain)
 
         self.model_fitted = self.model.fit()
     
     def predict(self, max_horizon: int = 1) -> pd.Series:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        max_horizon : int
+            DESCRIPTION.
+
+        Returns
+        -------
+        pd.Series
+            DESCRIPTION.
+
+        """
         if self.model_fitted is not None:
             return self.model_fitted.forecast(max_horizon) + self.min_val_train
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from src.data_pre_processing.preprocess_data import AirDataPreProcessor, split_air_data
     from sklearn.metrics import mean_squared_error
     import matplotlib.pyplot as plt

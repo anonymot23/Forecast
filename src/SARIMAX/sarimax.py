@@ -1,23 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 08:36:05 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import pandas as pd
 import numpy as np
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 class AirSarimax(object):
     
@@ -29,23 +14,67 @@ class AirSarimax(object):
         self.seasonal_order = seasonal_order 
 
     def initialize_model(self, yTrain: pd.Series) -> None:
+        """
+        Initialize model parameters
+
+        Parameters
+        ----------
+        yTrain : pd.Series
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         self.model = SARIMAX(yTrain,
                              order = self.order,
                              seasonal_order = self.seasonal_order )
         
     def fit(self, yTrain: np.ndarray) -> None:
+        """
+        Fit model's parameters
+
+        Parameters
+        ----------
+        yTrain : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        None
+            DESCRIPTION.
+
+        """
         if self.model is None:
             self.initialize_model(yTrain)
 
         self.model_fitted = self.model.fit()
 
     def predict(self, start: int = 0, end: int = 1) -> pd.Series:
+        """
+        Predict values
+
+        Parameters
+        ----------
+        start : int, optional
+            DESCRIPTION. The default is 0.
+        end : int, optional
+            DESCRIPTION. The default is 1.
+
+        Returns
+        -------
+        TYPE
+            DESCRIPTION.
+
+        """
         if self.model_fitted is not None:
             return self.model_fitted.predict(start=start, end=end)
 
 
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     from src.data_pre_processing.preprocess_data import AirDataPreProcessor, split_air_data
     from sklearn.metrics import mean_squared_error
     import matplotlib.pyplot as plt
