@@ -24,7 +24,7 @@ python tests.BASELINE.test_baseline_simple
 
 The code is decomposed into three folders
 
-- [data:] containing the input data
+- (#data:) containing the input data
 - [src:] containing necessary code for models' implementation
 - [tests:] containing tests and sample models' runs
 
