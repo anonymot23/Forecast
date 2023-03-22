@@ -5,7 +5,7 @@ from sklearn.linear_model import LinearRegression
 class AirBaseline(object):
     
     def __init__(self):
-        self._model = LinearRegression() 
+        self.model = LinearRegression() 
     
     def fit(self, yTrain: np.ndarray, xTrain: np.ndarray) -> None:
         """

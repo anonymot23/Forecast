@@ -1,33 +1,32 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 09:36:44 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname, join
-import sys
 
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 
 import matplotlib.pyplot as plt
     
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-testDirectory = join(runningDirectory, "tests\ES")
-## add path
-sys.path.append(runningDirectory)
-sys.path.append(testDirectory)
-
 from src.data_pre_processing.preprocess_data import split_air_data
 from src.LGBM.pre_process_data_lgbm import AirDataPreProcessorLgbm
 from generate_fcst_lgbm import AirForecastGeneratorLgbm
 
 
 def test_air_model(yTest: pd.Series, predTest: pd.Series) -> dict():
+    """
+    Compute test metrics
+
+    Parameters
+    ----------
+    yTest : pd.Series
+        DESCRIPTION.
+    predTest : pd.Series
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict()
+        DESCRIPTION.
+
+    """
     # compute error
     error = mean_squared_error(predTest, yTest)
     
@@ -35,6 +34,20 @@ def test_air_model(yTest: pd.Series, predTest: pd.Series) -> dict():
 
         
 def main_air_lgbm(params: dict = {}) -> None:
+    """
+    Model's runner
+
+    Parameters
+    ----------
+    params : dict, optional
+        DESCRIPTION. The default is {}.
+
+    Returns
+    -------
+    None
+        DESCRIPTION.
+
+    """
     # load and preprocess data 
     shift = 1
     lag = 12
@@ -60,7 +73,7 @@ def main_air_lgbm(params: dict = {}) -> None:
     
     
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     params = dict()
     main_air_lgbm(params)
     

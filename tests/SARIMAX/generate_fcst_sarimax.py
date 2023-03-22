@@ -1,21 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 09:11:15 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import pandas as pd
-    
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 from src.SARIMAX.sarimax import AirSarimax
 
@@ -29,6 +14,22 @@ class AirForecastGeneratorSarimax(object):
         self.train = train
     
     def get_forecast(self, train: pd.DataFrame, horizon: int = 1) -> pd.Series:
+        """
+        Generate forecast
+
+        Parameters
+        ----------
+        train : pd.DataFrame
+            DESCRIPTION.
+        test : pd.DataFrame
+            DESCRIPTION.
+
+        Returns
+        -------
+        predTest : np.ndarray
+            DESCRIPTION.
+
+        """
         ## reformat data for model
         yTrain = pd.Series(train['#Passengers'])
     

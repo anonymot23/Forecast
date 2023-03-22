@@ -1,22 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 09:11:15 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname
-import sys
 
 import numpy as np
 from darts.timeseries import TimeSeries as tsFormat
-    
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-## add path
-sys.path.append(runningDirectory)
 
 from src.TFT.tft import AirTFT
 
@@ -30,15 +15,33 @@ class AirForecastGeneratorTFT(object):
         self.train = train
     
     def get_forecast(self, train: tsFormat, covariates: tsFormat,
-                     test: tsFormat) -> np.ndarray: 
+                     test: tsFormat) -> np.ndarray:
+        """
+        Generate forecast
+
+        Parameters
+        ----------
+        train : tsFormat
+            DESCRIPTION.
+        covariates : tsFormat
+            DESCRIPTION.
+        test : tsFormat
+            DESCRIPTION.
+
+        Returns
+        -------
+        predTest : TYPE
+            DESCRIPTION.
+
+        """
 
         ## build model and fit 
-        modelTFT = AirTFT(self.input_chunk_len, self.fcst_horizon)
-        modelTFT.fit(train, covariates)
+        model = AirTFT(self.input_chunk_len, self.fcst_horizon)
+        model.fit(train, covariates)
     
         ## generate prediction 
         horizon = len(test)
-        predTest = modelTFT.predict(horizon).pd_dataframe().mean(axis=1)
+        predTest = model.predict(horizon).pd_dataframe().mean(axis=1)
 
         return predTest
     

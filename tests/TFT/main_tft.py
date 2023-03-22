@@ -1,33 +1,31 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Mar  5 09:36:44 2023
-
-@author: othma
-"""
-
-from os.path import abspath, dirname, join
-import sys
 
 import pandas as pd
 from sklearn.metrics import mean_squared_error
 
 import matplotlib.pyplot as plt
-    
-# import running folder: temporary fix
-## directories path
-directory = dirname(abspath(__file__))
-runningDirectory = dirname(dirname(directory))
-testDirectory = join(runningDirectory, "tests\ES")
-## add path
-sys.path.append(runningDirectory)
-sys.path.append(testDirectory)
-
 
 from src.TFT.pre_process_data_tft import AirDataPreProcessorTFT, split_air_data_darts
 from generate_fcst_tft import AirForecastGeneratorTFT
 
 
 def test_air_model(yTest: pd.Series, predTest: pd.Series) -> dict():
+    """
+    Compute test metrics
+
+    Parameters
+    ----------
+    yTest : pd.Series
+        DESCRIPTION.
+    predTest : pd.Series
+        DESCRIPTION.
+
+    Returns
+    -------
+    dict()
+        DESCRIPTION.
+
+    """
     # compute error
     error = mean_squared_error(predTest, yTest)
     
@@ -35,6 +33,20 @@ def test_air_model(yTest: pd.Series, predTest: pd.Series) -> dict():
 
         
 def main_air_tft(params: dict = {}) -> None:
+    """
+    Model's runner
+
+    Parameters
+    ----------
+    params : dict, optional
+        DESCRIPTION. The default is {}.
+
+    Returns
+    -------
+    None
+        DESCRIPTION.
+
+    """
     # load and preprocess data 
     air_preprocessor = AirDataPreProcessorTFT()
     dataAir, covariates  = air_preprocessor.get_air_data()
@@ -59,7 +71,7 @@ def main_air_tft(params: dict = {}) -> None:
     
     
 if __name__ == "__main__":
-    # simple test of functions 
+    # Test functions 
     params = dict()
     main_air_tft(params)
     
