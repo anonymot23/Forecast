@@ -2,9 +2,9 @@
 
 This repository aims at using some recent machine learning methods to solve a forecasting problem. For each model implemented, we try to follow the steps below
 
-- [Data preparation:](#pre-processing) Inputs are pre-processed, normalized and key features extracted
-- [Model training:](#training) Model implementation and parameters' fitting
-- [Evaluation:](#evaluation-to-ensure-satisfactory-model-performance)  Model testing to ensure satisfactory model performance 
+- **Data preparation:** Inputs are pre-processed, normalized and key features extracted
+- **Model training:** Model implementation and parameters' fitting
+- **Evaluation:**  Model testing to ensure satisfactory model performance 
 
 Some tests are added to ensure the correct model implementation and expected learning behaviour
 
