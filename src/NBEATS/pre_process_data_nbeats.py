@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import Tuple
+from pandas import Timestamp
 
 import pandas as pd
 import numpy as np
@@ -51,9 +52,18 @@ class AirDataPreProcessorDarts(object):
         else:
             raise TypeError("Only Scaler type is allowed")
             
-    def get_air_data(self) -> Tuple[tsFormat, tsFormat]:
+    def get_air_data(self, start_time: Timestamp = None, 
+                     end_time: Timestamp = None) -> Tuple[tsFormat, tsFormat]:
         """
         Load and pre-process air data
+
+        Parameters
+        ----------
+        start_time : Timestamp, optional
+            DESCRIPTION. The default is pd.Timestamp('1950-01-01').
+        end_time : Timestamp, optional
+            DESCRIPTION. The default is pd.Timestamp('1959-01-01').
+    
 
         Returns
         -------
@@ -62,7 +72,7 @@ class AirDataPreProcessorDarts(object):
 
         """
         # load air data
-        dataAir = load_air_data_darts()
+        dataAir = load_air_data_darts(start_time, end_time)
         
         # pre-process air data 
         series, covariates, self.scaler, self.scaler_covs = pre_process_data_darts(dataAir)
@@ -87,17 +97,28 @@ class AirDataPreProcessorDarts(object):
         pass    
     
 
-def load_air_data_darts() -> pd.DataFrame:
+def load_air_data_darts(start_time: Timestamp = None,
+                        end_time: Timestamp = None) -> tsFormat:
     """
     Load air data
 
+    Parameters
+    ----------
+    start_time : Timestamp, optional
+        DESCRIPTION. The default is pd.Timestamp('1950-01-01').
+    end_time : Timestamp, optional
+        DESCRIPTION. The default is pd.Timestamp('1959-01-01').
+
     Returns
     -------
-    TYPE
+    tsFormat
         DESCRIPTION.
 
     """
-    return AirPassengersDataset().load()
+    data = AirPassengersDataset().load()
+    if start_time and end_time:
+        data = data.slice(start_time , end_time)
+    return data
 
 def pre_process_data_darts(series: tsFormat) -> Tuple:
     """
