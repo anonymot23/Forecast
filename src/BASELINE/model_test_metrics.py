@@ -34,7 +34,5 @@ def test_air_model(yTest: pd.Series, predTest: pd.Series) -> dict():
              "mae": error_mae, "mape": error_mape, 
              "smape": error_smape, "swape": error_swape}
     
-    list1 = ["mse", "rmse", "mae", "mape", "smape", "swape"]
-    print(" | ".join(["{:0.2f}".format(error[k]) for k in list1]))
     return {"error": error}
         
